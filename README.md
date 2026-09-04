@@ -230,13 +230,20 @@ In your GitHub repo, navigate to **Settings** $\rightarrow$ **Secrets and variab
 
 ---
 
-## 💬 Telegram Commands
+## 💬 Telegram Remote Control & Live Output
+
+<div align="center">
+  <img src="docs/screenshots/telegram_bot_demo.png" alt="StreakKeeper Telegram Bot Live Output" width="380" style="border-radius: 12px; box-shadow: 0 4px 12px rgba(0,0,0,0.15);" />
+  <p><em>📸 Live Output: Multi-Account Management, Account Switching, Manual Rescue Commit, and Real-Time /status Streak Stats</em></p>
+</div>
+
+### Interactive Commands Reference
 
 | Command | Description | Example Response |
 | :--- | :--- | :--- |
-| `/status` | Shows today's contributions & streaks for active account | `🔥 @hackerrrarccc-sys: 3 contributions today!` |
-| `/rescue` | Manually triggers an instant rescue commit | `🤖 Rescue committed: Added daily log entry ✅` |
-| `/accounts` | Lists all registered accounts and their live status | `👥 Accounts: [1] @hackerrrarccc-sys (active), [2] @user2` |
+| `/status` | Shows today's contributions & streaks for active account | `🔥 @Nimmanagotitharunkumarhello: 16 contributions today, 5-day streak!` |
+| `/rescue` | Manually triggers an instant rescue commit | `🤖 [Manual Rescue Success]: Daily log committed to daily-log ✅` |
+| `/accounts` | Lists all registered accounts and their live status | `👥 Accounts: [1] @hackerrrarccc-sys (active), [2] @Nimmanagotitharunkumarhello` |
 | `/account <name>` | Switches the active account | `Switched to 'second' → @Nimmanagotitharunkumarhello ✅` |
 | `/help` | Displays command list and usage | `List of available commands...` |
 
