@@ -278,23 +278,52 @@ All settings can be configured via environment variables or `application.yml`:
 
 ---
 
-## 🗺️ Roadmap
+## 🗺️ Future Roadmap & Upcoming Issues
 
-- [x] Multi-account GitHub GraphQL contribution tracking
-- [x] Hourly automated scheduler with warning and rescue phases
-- [x] Two-way Telegram bot commands (`/status`, `/rescue`, `/accounts`)
-- [x] 24/7 serverless GitHub Actions Guardian layer
-- [ ] Firebase Realtime sync & mobile dashboard with interactive heatmap
-- [ ] FCM native push notifications for iOS & Android
-- [ ] AI Agent: Autonomous code contributor (picks an issue $\rightarrow$ implements $\rightarrow$ creates PR)
-- [ ] Gamified streak scoring & developer XP system
+Here is the structured backlog of what is being built next from this foundation:
+
+### 🌟 Level 1 — Extend StreakKeeper (Same Codebase)
+| Upcoming Feature / Issue | Effort | What You'll Learn / Tech |
+| :--- | :---: | :--- |
+| 📱 **Android App (Heatmap + Cards)** | `Medium` | Kotlin + Jetpack Compose + Firebase sync for real-time streak cards and mobile contribution grid. |
+| 🔔 **FCM Native Push Notifications** | `Medium` | Migrate/augment Telegram with direct Firebase Cloud Messaging to mobile devices. |
+| 🎮 **Developer XP System** | `Easy` | Points & leveling math awarded per daily commit, streak length, and PR merged. |
+| 🌐 **Web Dashboard** | `Easy` | Modern responsive frontend consuming the live `/stats` 365-day JSON endpoint. |
+| ☁️ **Oracle Cloud Free VM Deploy** | `Medium` | Persistent 24/7 background service for instantaneous `/status` Telegram command processing. |
+
+### 🔄 Level 2 — Sibling Projects (Reusing ~70% Architecture)
+| Project | Reuses From StreakKeeper |
+| :--- | :--- |
+| 🐕 **Repo Watchdog** | GitHub Webhooks/REST API + Telegram alert dispatching when repositories receive stars/forks/issues. |
+| 📰 **Commit Journal Bot** | GraphQL contribution collection + daily automated digest posted to Telegram summarizing code written. |
+| 🧩 **LeetCode + GitHub Dual Streak Tracker** | Scheduler & rescue pattern extended to track competitive programming consistency alongside GitHub. |
+| 🏆 **Team Leaderboard Edition** | Multi-account registry expanded to track friend groups or teams with competitive streak ranking. |
+
+### 🤖 Level 3 — The Autonomous AI Agent
+```text
+Phase 2–4: AI agent that reads repository issues → resolves TODOs → creates pull requests.
+Phase 7:   Autonomous scheduled TODO-hunting bot.
+```
+
+---
+
+## ⚖️ Copyright & Intellectual Property Notice
+
+```text
+Copyright (c) 2026 Nimmanagoti Tharun Kumar. All Rights Reserved.
+```
+
+- **Original Author:** Nimmanagoti Tharun Kumar ([@Nimmanagotitharunkumarhello](https://github.com/Nimmanagotitharunkumarhello))
+- **Source Code Integrity:** This repository, architecture, and documentation are protected by applicable copyright and intellectual property laws.
+- **Fair Use & Licensing:** Distributed under the terms of the [MIT License](LICENSE). Unauthorized commercial rebranding, trademark infringement, or uncredited re-distribution of proprietary assets is strictly prohibited and subject to copyright enforcement / DMCA action.
 
 ---
 
 ## 📄 License
 
-This project is licensed under the **MIT License** — see the [LICENSE](LICENSE) file for details.
+This project is open-sourced under the **MIT License** — see the [LICENSE](LICENSE) file for complete legal details.
 
 <div align="center">
 Built with ☕, Kotlin, and a lot of green squares. 🟩
 </div>
+
