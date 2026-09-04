@@ -11,11 +11,11 @@ streakkeeper:
   rescue-time: ${RESCUE_TIME:22:30}
   accounts:
     main:
-      token: ${GITHUB_TOKEN:}
+      token: ${MAIN_GH_TOKEN:}
       rescue-repo: ${GITHUB_RESCUE_REPO:daily-log}
       owner: ${GITHUB_OWNER:}
     second:
-      token: ${GITHUB_TOKEN_2:}
+      token: ${PERSONAL_GH_TOKEN:}
       rescue-repo: ${GITHUB_RESCUE_REPO_2:daily-log}
       owner: ${GITHUB_OWNER_2:}
   telegram:

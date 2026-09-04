@@ -12,3 +12,12 @@ build/
 out/
 .DS_Store
 gradle-dist/
+
+
+  .gitignore
+        build.gradle.kts
+        gradle/
+        gradlew
+        gradlew.bat
+        settings.gradle.kts
+        src/
