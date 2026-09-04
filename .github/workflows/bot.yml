@@ -11,20 +11,27 @@ jobs:
   run:
     runs-on: ubuntu-latest
     steps:
-      - uses: actions/checkout@v4
-      - uses: actions/setup-java@v4
+      - uses: actions/checkout@v5
+      - uses: actions/setup-java@v5
         with: { distribution: temurin, java-version: '21' }
-      - uses: gradle/actions/setup-gradle@v3
+      - uses: gradle/actions/setup-gradle@v4
 
-      - name: Build jar (no timeout — downloads deps)
-        run: ./gradlew bootJar -x test --no-daemon
+      - name: Build jar
+        run: |
+          chmod +x gradlew
+          ./gradlew bootJar -x test --no-daemon
 
       - name: Run bot ~4 minutes
         env:
-          GITHUB_TOKEN:       ${{ secrets.MAIN_GH_TOKEN }}
-          GITHUB_TOKEN_2:     ${{ secrets.PERSONAL_GH_TOKEN }}
+          MAIN_GH_TOKEN:      ${{ secrets.MAIN_GH_TOKEN }}
+          PERSONAL_GH_TOKEN:  ${{ secrets.PERSONAL_GH_TOKEN }}
           TELEGRAM_BOT_TOKEN: ${{ secrets.TELEGRAM_BOT_TOKEN }}
           TELEGRAM_CHAT_ID:   ${{ secrets.TELEGRAM_CHAT_ID }}
+          GITHUB_OWNER:       hackerrrarccc-sys
+          GITHUB_OWNER_2:     Nimmanagothitharunkumarhello
+          TIMEZONE:           Asia/Kolkata
+          ALERT_TIME:         "21:00"
+          RESCUE_TIME:        "22:30"
         run: |
           JAR=$(ls build/libs/*.jar | grep -v plain | head -n 1)
           echo "Running $JAR"
