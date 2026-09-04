@@ -1,0 +1,30 @@
+server:
+  port: ${PORT:8080}
+
+spring:
+  application:
+    name: streakkeeper
+
+streakkeeper:
+  timezone: ${TIMEZONE:Asia/Kolkata}
+  alert-time: ${ALERT_TIME:21:00}
+  rescue-time: ${RESCUE_TIME:22:30}
+  accounts:
+    main:
+      token: ${GITHUB_TOKEN:}
+      rescue-repo: ${GITHUB_RESCUE_REPO:daily-log}
+      owner: ${GITHUB_OWNER:}
+    second:
+      token: ${GITHUB_TOKEN_2:}
+      rescue-repo: ${GITHUB_RESCUE_REPO_2:daily-log}
+      owner: ${GITHUB_OWNER_2:}
+  telegram:
+    bot-token: ${TELEGRAM_BOT_TOKEN:}
+    chat-id: ${TELEGRAM_CHAT_ID:}
+    poll-interval-ms: ${TELEGRAM_POLL_INTERVAL_MS:3000}
+
+management:
+  endpoints:
+    web:
+      exposure:
+        include: health,info
