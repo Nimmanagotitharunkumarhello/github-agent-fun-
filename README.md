@@ -71,34 +71,35 @@ StreakKeeper operates with a dual-layer architecture: a full-featured **Spring B
 ```mermaid
 flowchart TD
     subgraph Trigger ["⏰ Trigger Events"]
-        A1[Hourly Spring Scheduler]
-        A2[GitHub Actions 30m Cron]
-        A3[Telegram User Command]
+        A1["Hourly Spring Scheduler"]
+        A2["GitHub Actions 30m Cron"]
+        A3["Telegram User Command"]
     end
 
     subgraph Core ["🧠 StreakKeeper Core"]
-        B[Account Manager & GitHub Service]
-        C{Today's Count > 0?}
-        D{Time >= 22:30 IST?}
-        E{Time >= 21:00 IST?}
-        R[ReadmeRescueService]
+        B["Account Manager & GitHub Service"]
+        C{"Today's Count > 0?"}
+        E{"Time >= 21:00 IST?"}
+        D{"Time >= 22:30 IST?"}
+        R["ReadmeRescueService"]
+        S["Streak Safe ✅"]
     end
 
     subgraph Targets ["🌐 Integrations"]
-        GH[(GitHub daily-log Repo)]
-        TG[Telegram Notifications]
+        GH[("GitHub daily-log Repo")]
+        TG["Telegram Notifications"]
     end
 
     A1 --> B
     A2 --> B
     A3 -->|/rescue or /status| B
     B --> C
-    C -- Yes --> S[Streak Safe ✅]
-    C -- No --> E
-    E -- No --> S
-    E -- Yes --> D
-    D -- No -->|Send Warning| TG
-    D -- Yes --> R
+    C -->|Yes| S
+    C -->|No| E
+    E -->|No| S
+    E -->|Yes| D
+    D -->|No: Send Warning| TG
+    D -->|Yes: Auto-Rescue| R
     R -->|Commit Log Entry| GH
     R -->|Confirm Saved| TG
 ```
