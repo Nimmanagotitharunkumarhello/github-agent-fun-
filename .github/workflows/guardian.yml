@@ -15,28 +15,58 @@ jobs:
           PAT_MAIN: ${{ secrets.MAIN_GH_TOKEN }}
           PAT_PERS: ${{ secrets.PERSONAL_GH_TOKEN }}
         run: |
-          tg() { curl -s "https://api.telegram.org/bot$TG_TOKEN/sendMessage" -d chat_id="$TG_CHAT" -d text="$1" >/dev/null; }
+          tg() { 
+            if [ -n "$TG_TOKEN" ] && [ -n "$TG_CHAT" ]; then
+              curl -s "https://api.telegram.org/bot$TG_TOKEN/sendMessage" -d chat_id="$TG_CHAT" -d text="$1" >/dev/null || true
+            fi
+          }
+
           guard() {
-            local PAT="$1" OWNER="$2" NOW C FILE SHA BODY RES NEWSHA
+            local PAT="$1" OWNER="$2" NOW C RESP FILE SHA BODY RES NEWSHA
+            if [ -z "$PAT" ]; then
+              echo "⚠️ Token for $OWNER is empty! Please check GitHub Secrets."
+              return 0
+            fi
+
             NOW=$(date -u +%H%M)
-            C=$(curl -s -H "Authorization: bearer $PAT" https://api.github.com/graphql \
-              -d "{\"query\":\"query{viewer{contributionsCollection(from:\\\"$(date -u +%FT00:00:00Z)\\\",to:\\\"$(date -u +%FT%TZ)\\\"){contributionCalendar{contributionDays{contributionCount}}}}}\"}" \
-              | jq '[.data.viewer.contributionsCollection.contributionCalendar.contributionDays[].contributionCount] | add // 0')
-            [ "$C" -gt 0 ] && return 0
+            RESP=$(curl -s -H "Authorization: bearer $PAT" https://api.github.com/graphql \
+              -d "{\"query\":\"query{viewer{contributionsCollection(from:\\\"$(date -u +%FT00:00:00Z)\\\",to:\\\"$(date -u +%FT%TZ)\\\"){contributionCalendar{contributionDays{contributionCount}}}}}\"}")
+
+            C=$(echo "$RESP" | jq '[.data?.viewer?.contributionsCollection?.contributionCalendar?.contributionDays[]?.contributionCount // 0] | add // 0' 2>/dev/null || echo "0")
+            echo "Account $OWNER: today contributions count = $C"
+
+            if [ "$C" -gt 0 ]; then
+              echo "Account $OWNER already has contributions today ✅"
+              return 0
+            fi
+
             if [ "$NOW" -ge 1530 ] && [ "$NOW" -lt 1700 ]; then
               tg "🔥 [$OWNER] 0 contributions today! Streak at risk — deadline 22:30 IST"
             elif [ "$NOW" -ge 1700 ]; then
               tg "🔥 [$OWNER] still 0 — auto-rescuing..."
               FILE=$(curl -s -H "Authorization: Bearer $PAT" "https://api.github.com/repos/$OWNER/daily-log/contents/README.md")
-              SHA=$(echo "$FILE" | jq -r .sha)
-              BODY=$(echo "$FILE" | jq -r .content | base64 -d)
+              SHA=$(echo "$FILE" | jq -r '.sha // empty')
+              BODY=$(echo "$FILE" | jq -r '.content // empty' | base64 -d 2>/dev/null || echo "# Daily Log")
               printf '%s\n### %s — kept alive 🔥 (auto-rescue)\n' "$BODY" "$(date -u +%F)" | base64 -w0 > /tmp/b64
-              RES=$(curl -s -X PUT -H "Authorization: Bearer $PAT" \
-                "https://api.github.com/repos/$OWNER/daily-log/contents/README.md" \
-                -d "{\"message\":\"docs: daily log $(date -u +%F)\",\"content\":\"$(cat /tmp/b64)\",\"sha\":\"$SHA\"}")
+              
+              if [ -n "$SHA" ]; then
+                RES=$(curl -s -X PUT -H "Authorization: Bearer $PAT" \
+                  "https://api.github.com/repos/$OWNER/daily-log/contents/README.md" \
+                  -d "{\"message\":\"docs: daily log $(date -u +%F)\",\"content\":\"$(cat /tmp/b64)\",\"sha\":\"$SHA\"}")
+              else
+                RES=$(curl -s -X PUT -H "Authorization: Bearer $PAT" \
+                  "https://api.github.com/repos/$OWNER/daily-log/contents/README.md" \
+                  -d "{\"message\":\"docs: create daily log $(date -u +%F)\",\"content\":\"$(cat /tmp/b64)\"}")
+              fi
               NEWSHA=$(echo "$RES" | jq -r '.commit.sha // empty')
-              [ -n "$NEWSHA" ] && tg "🤖 [$OWNER] rescue committed — streak saved ✅" || tg "❌ [$OWNER] rescue FAILED"
+              if [ -n "$NEWSHA" ]; then
+                tg "🤖 [$OWNER] rescue committed — streak saved ✅"
+              else
+                tg "❌ [$OWNER] rescue FAILED"
+              fi
             fi
           }
+
           guard "$PAT_MAIN" "hackerrrarccc-sys"
-          guard "$PAT_PERS" "Nimmanagothitharunkumarhello"
+          guard "$PAT_PERS" "Nimmanagotitharunkumarhello"
+
